@@ -10,6 +10,7 @@ The goal of this project is to implement a conversation tool that follows these 
 
 1. **Gemini** (our chatbot) begins each round of the conversation.
 2. **User** interacts by providing responses to Gemini’s prompts.
+3. **Gemini** (our chatbot) takes audio input and prompts to respond in user's voice
 
 ### Example Conversation Flow:
 
@@ -81,7 +82,7 @@ This project is made in collaboration with:
 - **Rolland He** (University of Toronto)  
   Email: [rolland.he@mail.utoronto.ca](mailto:rolland.he@mail.utoronto.ca)
 
-- **Sanjeev Kalagony** (University of Waterloo)  
+- **Sanjeev Kalagony** (University of Waterloo)   
   Email: [skalagon@uwaterloo.ca](mailto:skalagon@uwaterloo.ca)
 
 - **Hank Shi** (University of Waterloo)  
@@ -89,7 +90,7 @@ This project is made in collaboration with:
 
 ---
 
-## Future Plans
+## Future Plans 
 
 - Improve Gemini’s AI-driven response generation.
 - Add support for personalized feedback loops.
