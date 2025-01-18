@@ -34,7 +34,7 @@ The goal of this project is to implement a conversation tool that follows these 
 
 **Gemini** generates approximately 30-second responses (around 3-4 sentences) tailored to your background and the job description.
 
----
+- - -
 
 ## Getting Started
 
