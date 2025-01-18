@@ -6,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { generateResponse, INTERVIEW_FORMAT } from "@/lib/gemini";
 import { textToSpeech, playAudio } from "@/lib/elevenlabs";
 import { useToast } from "@/components/ui/use-toast";
-import { RotateCcw, Mic, Key, Volume2, List } from "lucide-react";
+import { RotateCcw, Mic, Key, Volume2, List, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import RecordRTC from "recordrtc";
 
 interface Message {
@@ -22,6 +24,9 @@ interface Voice {
 type InterviewState = "initial" | "got_resume" | "got_job" | "got_question_types" | "questions_ready";
 
 export default function Index() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -40,6 +45,8 @@ export default function Index() {
   const { toast } = useToast();
   const resumeContent = useRef<string>("");
   const targetJob = useRef<string>("");
+  const audioContext = useRef<AudioContext | null>(null);
+  const audioSource = useRef<AudioBufferSourceNode | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,6 +55,13 @@ export default function Index() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const startRecording = async () => {
     if (!apiKey) {
@@ -213,8 +227,20 @@ export default function Index() {
 
     try {
       const audioBuffer = await textToSpeech(content, apiKey, voiceId);
-      await playAudio(audioBuffer);
-      ttsQueue.current.shift(); // Remove processed item
+      audioContext.current = new AudioContext();
+      const audioData = await audioContext.current.decodeAudioData(audioBuffer);
+      audioSource.current = audioContext.current.createBufferSource();
+      audioSource.current.buffer = audioData;
+      audioSource.current.connect(audioContext.current.destination);
+      audioSource.current.start(0);
+      
+      audioSource.current.onended = () => {
+        ttsQueue.current.shift();
+        isProcessing.current = false;
+        if (ttsQueue.current.length > 0) {
+          processQueue();
+        }
+      };
     } catch (error: any) {
       const errorDetail = error.message ? JSON.parse(error.message).detail : null;
       
@@ -224,7 +250,6 @@ export default function Index() {
           title: "Too Many Requests",
           description: "Please wait a moment before playing more messages.",
         });
-        // Keep the item in queue to retry
         setTimeout(() => {
           isProcessing.current = false;
           processQueue();
@@ -237,11 +262,7 @@ export default function Index() {
         title: "Error",
         description: errorDetail?.message || "Failed to play audio. Please try again.",
       });
-    } finally {
       isProcessing.current = false;
-      if (ttsQueue.current.length > 0) {
-        processQueue();
-      }
     }
   };
 
@@ -316,6 +337,24 @@ export default function Index() {
     }
   };
 
+  const handleLogout = () => {
+    // Stop any playing audio
+    if (audioSource.current) {
+      audioSource.current.stop();
+      audioSource.current.disconnect();
+      audioSource.current = null;
+    }
+    if (audioContext.current) {
+      audioContext.current.close();
+      audioContext.current = null;
+    }
+    // Clear the queue
+    ttsQueue.current = [];
+    isProcessing.current = false;
+    
+    logout();
+  };
+
   return (
     <div className="container flex h-screen flex-col py-4">
       <div className="mb-4 flex items-center justify-between">
@@ -375,6 +414,9 @@ export default function Index() {
             </Button>
             <Button variant="outline" size="icon" onClick={handleRestart}>
               <RotateCcw className="h-4 w-4" />
+            </Button>
+            <Button variant="destructive" size="icon" onClick={handleLogout} title="Logout">
+              <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
