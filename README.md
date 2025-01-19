@@ -3,7 +3,9 @@
 HearMeOut is a conversational tool designed to help users improve their interview answers by providing insightful feedback and tailored perspectives based on their resume and job descriptions. This iterative tool guides users through a conversation, generating interview questions and crafting tailored responses to enhance preparation.
 
 DoraHacks Link: https://dorahacks.io/buidl/21604/
+
 Youtube Link: https://www.youtube.com/watch?v=EmzXJorvOJw
+
 Figma Slide Deck: https://www.figma.com/deck/IiRoDSCREFQoqMrB0iswGA/HearMeOut-UofTHacks?node-id=1-352&t=tLicoKN7IahUAUSI-1
 ![](HearMeOut.png)
 
