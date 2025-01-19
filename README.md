@@ -2,6 +2,8 @@
 
 HearMeOut is a conversational tool designed to help users improve their interview answers by providing insightful feedback and tailored perspectives based on their resume and job descriptions. This iterative tool guides users through a conversation, generating interview questions and crafting tailored responses to enhance preparation.
 
+![](HearMeOut.png)
+
 ---
 
 ## Project Description
