@@ -4,10 +4,6 @@ HearMeOut is a conversational tool designed to help users improve their intervie
 
 DoraHacks Link: https://dorahacks.io/buidl/21604/
 
-Youtube Link: https://www.youtube.com/watch?v=EmzXJorvOJw
-
-Figma Slide Deck: https://www.figma.com/deck/IiRoDSCREFQoqMrB0iswGA/HearMeOut-UofTHacks?node-id=1-352&t=tLicoKN7IahUAUSI-1
-
 
 ![](HearMeOut.png)
 
